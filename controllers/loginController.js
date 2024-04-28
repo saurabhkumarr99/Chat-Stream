@@ -1,8 +1,17 @@
+const redisSkr = require('../config/redis'); // Import the Redis client library
 const expressSkr = require('express'); // Load the Express module for routing
 const jwtSkr = require('jsonwebtoken'); // Load the jsonwebtoken module for JWT operations
 const bcryptSkr = require('bcrypt'); // Load the bcrypt module for password hashing
 const routerSkr = expressSkr.Router(); // Create a new Router object
 const poolSkr = require('../config/database'); // Load the database configuration
+
+// Create a Redis client using default settings
+const clientSkr = redisSkr.createClient();
+
+// Set up an event listener to handle errors that occur when connecting to the Redis server
+clientSkr.on('error', (error) => {
+    console.error('Error connecting to Redis:', error); // Log any connection errors
+});
 
 // Function to generate a random secret key for JWT signing
 const generateSecretKeySkr = () => {
@@ -37,6 +46,9 @@ routerSkr.post('/login', async (reqSkr, resSkr) => {
         if (!passwordMatchSkr) {
             return resSkr.status(401).json({ error: 'Invalid email or password' }); // If passwords do not match, return an error
         }
+
+        // Store login information in Redis
+        clientSkr.set(email, userSkr.id);
 
         // Generate a JWT token using the secret key
         const secretKeySkr = generateSecretKeySkr();
