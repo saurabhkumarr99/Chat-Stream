@@ -19,7 +19,7 @@ Welcome to Chat Stream! This application provides a platform for real-time commu
 ## Project Links
 
 
-- GitHub: [Chat Stream](https://github.com/yourusername/chat-stream)
+- GitHub: [Chat Stream](https://github.com/saurabhkumarr99/Chat-Stream)
 
 
 ## Table of Contents
@@ -142,7 +142,7 @@ The project follows a structured directory layout for better organization:
 - **coverage/**
 - **controllers**
 - **Jmeter Testing**
-- **test***
+- **test**
 - **server.js**
 - **README.md**
 
