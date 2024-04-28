@@ -1,30 +1,31 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const userRouter = require('./controllers/userController');
-const loginRouter = require('./controllers/loginController');
-const socketController = require('./controllers/socketController'); // Import the socket controller
+const expressSkr = require('express');
+const bodyParserSkr = require('body-parser');
+const userRouterSkr = require('./controllers/userController');
+const loginRouterSkr = require('./controllers/loginController');
+const socketControllerSkr = require('./controllers/socketController'); 
 
 // Initialize a basic express server
-const app = express();
+const appSkr = expressSkr();
 
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
-
-// Serve static files from the public directory
-app.use(express.static('public'));
+appSkr.use(bodyParserSkr.urlencoded({ extended: false }));
+appSkr.use(bodyParserSkr.json());
 
 // Use user and task routes
-app.use('/api/users', userRouter);
-app.use('/api', loginRouter);
+appSkr.use('/api/users', userRouterSkr);
+appSkr.use('/api', loginRouterSkr);
+
+// Serve static files from the public directory
+appSkr.use(expressSkr.static('public'));
 
 // Upgrade HTTP server to handle WebSocket connections
-const server = app.listen(process.env.PORT || 3000, function() {
-    console.log(`Server is listening on http://localhost:${server.address().port}`);
+const serverSkr = appSkr.listen(process.env.PORT || 3000, function() {
+    console.log(`Server is listening on http://localhost:${serverSkr.address().port}`);
 });
 
+
 // Attach WebSocket server to the HTTP server
-server.on('upgrade', function upgrade(request, socket, head) {
-    socketController.handleUpgrade(request, socket, head, function done(ws) {
-        socketController.emit('connection', ws, request);
+serverSkr.on('upgrade', function upgrade(request, socket, head) {
+    socketControllerSkr.handleUpgrade(request, socket, head, function done(ws) {
+        socketControllerSkr.emit('connection', ws, request);
     });
 });

@@ -1,10 +1,11 @@
-const express = require('express');
-const router = express.Router();
-const bcrypt = require('bcrypt');
+const expressSkr = require('express');  // Import the Express framework
+const routerSkr = expressSkr.Router();  // Create a router object to manage routes
+const bcryptSkr = require('bcrypt');  // Import the bcrypt library for password hashing
 
-const pool = require('../config/database'); 
+const poolSkr = require('../config/database');  // Import the database pool configuration
 
-router.post('/register', async (req, res) => {
+// POST /register to handle user registrations
+routerSkr.post('/register', async (req, res) => {
     const { username, email, password } = req.body;
 
     // Check if username, email, or password is missing
@@ -13,54 +14,54 @@ router.post('/register', async (req, res) => {
     }
 
     try {
-        // Hash the password
-        const hashedPassword = await bcrypt.hash(password, 10); // 10 is the salt rounds
+        // Hash the password using bcrypt with 10 salt rounds
+        const hashedPasswordSkr = await bcryptSkr.hash(password, 10);
 
-        // Insert the user into the database with the hashed password
-        const client = await pool.connect();
-        const result = await client.query('INSERT INTO users (username, email, password) VALUES ($1, $2, $3) RETURNING *', [username, email, hashedPassword]);
-        const newUser = result.rows[0];
-        client.release();
-        res.status(201).json(newUser);
-    } catch (error) {
-        console.error(error);
+        // Insert the new user into the database with the hashed password
+        const clientSkr = await poolSkr.connect();
+        const resultSkr = await clientSkr.query('INSERT INTO users (username, email, password) VALUES ($1, $2, $3) RETURNING *', [username, email, hashedPasswordSkr]);
+        const newUserSkr = resultSkr.rows[0];
+        clientSkr.release();
+        res.status(201).json(newUserSkr);
+    } catch (errorSkr) {
+        console.error(errorSkr);
         res.status(400).json({ error: 'Internal Server Error' });
     }
 });
 
-
-router.delete('/:username', async (req, res) => {
+// DELETE /:username to delete a user by username
+routerSkr.delete('/:username', async (req, res) => {
     const { username } = req.params;
 
     try {
-        const client = await pool.connect();
-        const result = await client.query('DELETE FROM users WHERE username = $1 RETURNING *', [username]);
-        const deletedUser = result.rows[0];
-        client.release();
+        const clientSkr = await poolSkr.connect();
+        const resultSkr = await clientSkr.query('DELETE FROM users WHERE username = $1 RETURNING *', [username]);
+        const deletedUserSkr = resultSkr.rows[0];
+        clientSkr.release();
 
-        if (deletedUser) {
-            res.status(200).json({ message: 'User deleted successfully', user: deletedUser });
+        if (deletedUserSkr) {
+            res.status(200).json({ message: 'User deleted successfully', user: deletedUserSkr });
         } else {
             res.status(404).json({ error: 'User not found' });
         }
-    } catch (error) {
-        console.error(error);
+    } catch (errorSkr) {
+        console.error(errorSkr);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
 
-// GET /users
-router.get('/', async (req, res) => {
+// GET /users to retrieve all users
+routerSkr.get('/', async (req, res) => {
     try {
-        const client = await pool.connect();
-        const result = await client.query('SELECT * FROM users');
-        const users = result.rows;
-        client.release();
-        res.status(200).json(users);
-    } catch (error) {
-        console.error(error);
+        const clientSkr = await poolSkr.connect();
+        const resultSkr = await clientSkr.query('SELECT * FROM users');
+        const usersSkr = resultSkr.rows;
+        clientSkr.release();
+        res.status(200).json(usersSkr);
+    } catch (errorSkr) {
+        console.error(errorSkr);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
 
-module.exports = router;
+module.exports = routerSkr;  // Export the router for use in other parts of the application

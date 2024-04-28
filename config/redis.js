@@ -1,11 +1,12 @@
-const redis = require('redis');
+const redis = require('redis'); // Import the Redis client library
 
-// Create a Redis client
-const client = redis.createClient();
+// Create a Redis client using default settings
+const clientSkr = redis.createClient();
 
-// Handle Redis connection errors
-client.on('error', (error) => {
-    console.error('Error connecting to Redis:', error);
+// Set up an event listener to handle errors that occur when connecting to the Redis server
+clientSkr.on('error', (error) => {
+    console.error('Error connecting to Redis:', error); // Log any connection errors
 });
 
-module.exports = client;
+// Export the Redis client so it can be used in other parts of the application
+module.exports = clientSkr;

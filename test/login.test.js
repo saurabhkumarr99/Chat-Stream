@@ -1,51 +1,55 @@
-const request = require('supertest');
-const app = require('../server');
+const requestSkr = require('supertest');
+const appSkr = require('../server');
 
-describe('Login API', () => {
-  // Test login endpoint
-  describe('POST /login', () => {
-    it('should login with valid credentials', async () => {
-      const userCredentials = {
+// Describe block for testing the Login API functionality
+describe('Login API Skr', () => {
+  // Nested describe for the POST /login endpoint
+  describe('POST /login Skr', () => {
+    // Test case for successful login with valid credentials
+    it('should login with valid credentials Skr', async () => {
+      const userCredentialsSkr = {
         email: 'test@example.com',
         password: 'password123'
       };
 
-      const response = await request(app)
+      const responseSkr = await requestSkr(appSkr)
         .post('/login')
-        .send(userCredentials);
+        .send(userCredentialsSkr);
 
-      expect(response.status).toBe(200);
-      expect(response.body).toHaveProperty('message', 'Login successful');
-      expect(response.body).toHaveProperty('token');
+      expect(responseSkr.status).toBe(200);
+      expect(responseSkr.body).toHaveProperty('message', 'Login successful');
+      expect(responseSkr.body).toHaveProperty('token');
     });
 
-    it('should return 401 with invalid credentials', async () => {
-      const invalidCredentials = {
+    // Test case for failed login due to invalid credentials
+    it('should return 401 with invalid credentials Skr', async () => {
+      const invalidCredentialsSkr = {
         email: 'invalid@example.com',
         password: 'invalidpassword'
       };
 
-      const response = await request(app)
+      const responseSkr = await requestSkr(appSkr)
         .post('/login')
-        .send(invalidCredentials);
+        .send(invalidCredentialsSkr);
 
-      expect(response.status).toBe(401);
-      expect(response.body).toHaveProperty('error', 'Invalid email or password');
+      expect(responseSkr.status).toBe(401);
+      expect(responseSkr.body).toHaveProperty('error', 'Invalid email or password');
     });
 
-    it('should return 500 if server encounters an error', async () => {
-      const userCredentials = {
+    // Test case for simulating a server error during login
+    it('should return 500 if server encounters an error Skr', async () => {
+      const userCredentialsSkr = {
         email: 'test@example.com',
         password: 'password123'
       };
 
-      // Mocking an error by sending invalid request body
-      const response = await request(app)
+      // Intentionally causing an error by sending an incomplete request
+      const responseSkr = await requestSkr(appSkr)
         .post('/login')
         .send();
 
-      expect(response.status).toBe(500);
-      expect(response.body).toHaveProperty('error', 'Internal Server Error');
+      expect(responseSkr.status).toBe(500);
+      expect(responseSkr.body).toHaveProperty('error', 'Internal Server Error');
     });
   });
 });

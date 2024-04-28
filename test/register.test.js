@@ -1,23 +1,25 @@
-const request = require('supertest');
-const app = require('../server'); 
+const requestSkr = require('supertest');
+const appSkr = require('../server');
 
-describe('Register API', () => {
-  // Test registration endpoint
-  describe('POST /register', () => {
-    it('should register a new user', async () => {
-      const newUser = {
+// Describe block for testing the Register API functionality
+describe('Register API Skr', () => {
+  // Nested describe for the POST /register endpoint
+  describe('POST /register Skr', () => {
+    // Test case for successful user registration
+    it('should register a new user Skr', async () => {
+      const newUserSkr = {
         username: 'testuser',
         email: 'test@example.com',
         password: 'password123'
       };
 
-      const response = await request(app)
+      const responseSkr = await requestSkr(appSkr)
         .post('/register')
-        .send(newUser);
+        .send(newUserSkr);
 
-      expect(response.status).toBe(201);
-      expect(response.body).toHaveProperty('username', newUser.username);
-      expect(response.body).toHaveProperty('email', newUser.email);
+      expect(responseSkr.status).toBe(201);
+      expect(responseSkr.body).toHaveProperty('username', newUserSkr.username);
+      expect(responseSkr.body).toHaveProperty('email', newUserSkr.email);
     });
   });
 });

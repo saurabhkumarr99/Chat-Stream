@@ -1,61 +1,62 @@
-const WebSocket = require('ws');
-const { publishToKafka } = require('../config/kafka');
+const WebSocketSkr = require('ws');
+const { 
+  r } = require('../config/kafka');
 
 // Function to create a WebSocket client
-const createWebSocketClient = () => {
-  return new WebSocket('ws://localhost:3000');
+const createWebSocketClientSkr = () => {
+  return new WebSocketSkr('ws://localhost:3000');
 };
 
-describe('WebSocket Server', () => {
-  let wsClient;
+// Test suite for WebSocket Server
+describe('WebSocket Server Skr', () => {
+  let wsClientSkr;
 
+  // Before all tests, create a WebSocket client
   beforeAll(() => {
-    // Create a WebSocket client before running tests
-    wsClient = createWebSocketClient();
+    wsClientSkr = createWebSocketClientSkr();
   });
 
+  // After all tests, close the WebSocket client
   afterAll(() => {
-    // Close the WebSocket client after all tests have finished
-    wsClient.close();
+    wsClientSkr.close();
   });
 
-  it('should establish connection with the WebSocket server', (done) => {
-    wsClient.on('open', () => {
+  // Test case to verify connection establishment with WebSocket server
+  it('should establish connection with the WebSocket server Skr', (done) => {
+    wsClientSkr.on('open', () => {
       // Connection established successfully
       done();
     });
   });
 
-  it('should receive and broadcast message from WebSocket server', (done) => {
-    const message = 'Test message';
+  // Test case to verify receiving and broadcasting of messages from WebSocket server
+  it('should receive and broadcast message from WebSocket server Skr', (done) => {
+    const messageSkr = 'Test message';
 
-    // Event listener to handle incoming messages from WebSocket server
-    wsClient.on('message', (data) => {
-      expect(data).toBe(message);
+    wsClientSkr.on('message', (data) => {
+      expect(data).toBe(messageSkr);
       done();
     });
 
-    // Send a message to the WebSocket server
-    wsClient.send(message);
+    wsClientSkr.send(messageSkr);
   });
 
-  it('should publish message to Kafka when received by WebSocket server', (done) => {
-    const message = 'Test message for Kafka';
+  // Test case to verify publishing message to Kafka when received by WebSocket server
+  it('should publish message to Kafka when received by WebSocket server Skr', (done) => {
+    const messageSkr = 'Test message for Kafka';
 
-    // Mocking the publishToKafka function
-    const publishToKafkaMock = jest.fn();
+    // Mocking the publishToKafkaSkr function
+    const publishToKafkaMockSkr = jest.fn();
 
-    // Simulate message reception by WebSocket server
-    wsClient.on('message', async () => {
-      // Call publishToKafka function
-      await publishToKafkaMock(message);
+    wsClientSkr.on('message', async () => {
+      // Call publishToKafkaSkr function
+      await publishToKafkaMockSkr(messageSkr);
 
-      // Check if publishToKafka function was called with the correct message
-      expect(publishToKafkaMock).toHaveBeenCalledWith(message);
+      // Check if publishToKafkaSkr function was called with the correct message
+      expect(publishToKafkaMockSkr).toHaveBeenCalledWith(messageSkr);
       done();
     });
 
-    // Send a message to the WebSocket server
-    wsClient.send(message);
+    wsClientSkr.send(messageSkr);
   });
 });

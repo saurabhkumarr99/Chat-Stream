@@ -1,42 +1,44 @@
-const WebSocket = require('ws');
-const pool = require('../config/database');
-const { publishToKafka } = require('../config/kafka');
+const WebSocketSktr = require('ws'); // Import the WebSocket library
+const poolSktr = require('../config/database'); // Import the database connection pool
+const { publishToKafkaSkr } = require('../config/kafka'); // Import the publish to Kafka function
 
-// Initialize a WebSocket Server instance
-const wss = new WebSocket.Server({ noServer: true });
+// Initialize a WebSocket Server instance without an HTTP server
+const wssSktr = new WebSocketSktr.Server({ noServer: true });
 
-wss.on('connection', function connection(ws) {
+// Event listener for client connections to the WebSocket server
+wssSktr.on('connection', function connectionSktr(wsSktr) {
     console.log('A new client connected!');
 
-    ws.on('message', async function incoming(message) {
-        console.log('received: %s', message);
+    // Event listener for receiving messages from clients
+    wsSktr.on('message', async function incomingSktr(messageSktr) {
+        console.log('received: %s', messageSktr);
 
-        // Broadcast incoming message to all clients
-        wss.clients.forEach(function each(client) {
-            if (client !== ws && client.readyState === WebSocket.OPEN) {
-                client.send(message);
+        // Broadcast the incoming message to all connected clients except the sender
+        wssSktr.clients.forEach(function eachSktr(clientSktr) {
+            if (clientSktr !== wsSktr && clientSktr.readyState === WebSocketSktr.OPEN) {
+                clientSktr.send(messageSktr);
             }
         });
 
         // Store the message in the database
         try {
-            const client = await pool.connect();
-            const result = await client.query('INSERT INTO messages (message) VALUES ($1) RETURNING *', [message]);
-            const newMessage = result.rows[0];
-            client.release();
-            console.log('Message stored in the database:', newMessage);
-
-        } catch (error) {
-            console.error('Error storing message in the database:', error);
+            const clientDbSktr = await poolSktr.connect(); // Connect to the database
+            const resultSktr = await clientDbSktr.query('INSERT INTO messages (message) VALUES ($1) RETURNING *', [messageSktr]); // Insert message into the database
+            const newMessageSktr = resultSktr.rows[0]; // Retrieve the inserted message from the result
+            clientDbSktr.release(); // Release the database connection
+            console.log('Message stored in the database:', newMessageSktr);
+        } catch (errorSktr) {
+            console.error('Error storing message in the database:', errorSktr);
         }
 
-        // Publish message to Kafka
-        await publishToKafka(message);
+        // Publish the message to a Kafka topic
+        await publishToKafkaSkr(messageSktr);
     });
 
-    ws.on('close', () => {
+    // Event listener for client disconnections
+    wsSktr.on('close', () => {
         console.log('Client has disconnected');
     });
 });
 
-module.exports = wss;
+module.exports = wssSktr; // Export the WebSocket server for use elsewhere in the application
