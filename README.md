@@ -1,21 +1,25 @@
-# Task Manager
+# Chat Stream
 
 ## Description
 
-Welcome to the Task Manager! This application serves as a platform where users can manage their tasks efficiently. Users can create, update, delete, and view tasks using this application. It provides a user-friendly interface for organizing tasks and staying productive.
+Welcome to Chat Stream! This application provides a platform for real-time communication through chat. Users can join chat rooms, send messages, and interact with other users in real-time. It offers a seamless and intuitive interface for connecting with friends, colleagues, or communities.
 
 ## Technologies Used
 
 - Node.js
 - Express.js
+- WebSocket
 - PostgreSQL
+- Redis
+- JWT (JSON Web Tokens)
+- bcrypt
 - Jest
 - Supertest
 
 ## Project Links
 
 
-- GitHub: [Task Manager](https://github.com/saurabhkumarr99/Task-Manger)
+- GitHub: [Chat Stream](https://github.com/yourusername/chat-stream)
 
 
 ## Table of Contents
@@ -23,39 +27,42 @@ Welcome to the Task Manager! This application serves as a platform where users c
 - [Features](#features)
 - [Getting Started](#getting-started)
 - [Usage](#usage)
-- [API Endpoint](#APIEndpoints)
-- [Components Structure](#components-structure)
+- [API Endpoints](#api-endpoints)
+- [Database Schema](#database-schema)
+- [Project Structure](#project-structure)
 - [Screenshots](#screenshots)
 - [Author](#author)
 
 ## Features
 
 
-- **User Authentication:** Users can register and log in to manage their tasks securely.
-- **Task Management:** Users can create, update, delete, and view tasks.
-- **RESTful API:** Provides API endpoints for CRUD operations on tasks.
-- **Database Integration:** Utilizes PostgreSQL to store task data.
+- **Real-time Chat:** Users can engage in real-time conversations with other users.
+- **Chat Rooms:** Multiple chat rooms are available for users to join based on their interests.
+- **User Authentication:** Secure user authentication using JWT tokens and bcrypt for password hashing.
+- **Database Integration:** Utilizes PostgreSQL for storing user data and Redis for caching.
+- **WebSockets:** WebSocket protocol for real-time communication between clients and server.
 - **Unit Testing:** Jest framework is used for unit testing with full test coverage.
 - **Integration Testing:** Supertest library is used for testing API endpoints.
-- **User-Friendly Interface:** Offers an intuitive interface for task management.
+- **User-Friendly Interface:** Offers an intuitive interface for seamless chatting experience.
 
 ## Getting Started
 
 ### Prerequisites
 
 - Node.js and npm (Node Package Manager) installed on your computer.
-- PostgreSQL installed locally or remotely.
+- PostgreSQL and Redis installed locally or remotely.
 
 
-Follow these steps to run the IPO Tracker App locally:
+Follow these steps to run the Chat Stream App locally:
 
-1. **Unzip the Task Manager:**
+1. **Unzip the Chat Stream:**
 
 2. **Navigate to the project directory:**
 
    ```bash
-   cd Task Manager
-   ``` 
+   cd chat-stream
+   ```
+
 
 2. **Install Dependencies:**
 
@@ -66,21 +73,23 @@ Follow these steps to run the IPO Tracker App locally:
 3. **DB Quries:**
 
    ```bash
-   CREATE DATABASE task_manager;
+   CREATE DATABASE Chat-stream;
 
-   CREATE TABLE users (
-    id SERIAL PRIMARY KEY,
-    username VARCHAR(255) NOT NULL,
-    email VARCHAR(255) NOT NULL,
-    password VARCHAR(255) NOT NULL
-   );
+   -- Create the users table
+      CREATE TABLE users (
+       id SERIAL PRIMARY KEY,
+       username VARCHAR(255) NOT NULL,
+       email VARCHAR(255) NOT NULL UNIQUE,
+       password VARCHAR(255) NOT NULL
+      );
 
-   CREATE TABLE tasks (
-    id SERIAL PRIMARY KEY,
-    title VARCHAR(255) NOT NULL,
-    description TEXT,
-    user_id INTEGER REFERENCES users(id)
-   );
+   -- Create the messages table
+      CREATE TABLE messages (
+        id SERIAL PRIMARY KEY,
+        message TEXT NOT NULL,
+        timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+     );
+
 
    ``` 
 
@@ -88,7 +97,7 @@ Follow these steps to run the IPO Tracker App locally:
 
  - `Start Project`
    ```bash
-      node app.js
+      node server.js
    ``` 
 
  - `Test Project`
@@ -100,39 +109,41 @@ Follow these steps to run the IPO Tracker App locally:
    ```bash
       npm run coverage
    ``` 
-
 ## Usage
 
 - **User Registration:** Users can register for an account using their email address and password.
 - **User Login:** Registered users can log in to their accounts securely.
-- **Task Creation:** Authenticated users can create new tasks by providing a title and description.
-- **Task Update:** Users can update existing tasks by modifying their title and description.
-- **Task Deletion:** Users can delete unwanted tasks from their task list.
-- **Task Viewing:** Users can view a list of all tasks they have created.
+- **Join Chat Rooms:** Users can join existing chat rooms to participate in conversations.
+- **Send Messages:** Users can send messages in chat rooms, and the messages will be displayed in real-time to other users in the same chat room.
+- **Create Chat Rooms:** Admin users can create new chat rooms and manage them.
+- **Logout:** Users can log out of their accounts to end their session securely.
 
 ## API Endpoints
 
-### Users
+### Authentication
 
-- **POST /api/users/register:** Register a new user.
-- **POST /api/users/login:** Log in an existing user.
+- **POST /api/auth/register:** Register a new user.
+- **POST /api/auth/login:** Log in an existing user.
 
-### Tasks
 
-- **GET /api/tasks:** Get all tasks.
-- **GET /api/tasks/:id:** Get a specific task by ID.
-- **POST /api/tasks:** Create a new task.
-- **PUT /api/tasks/:id:** Update an existing task.
-- **DELETE /api/tasks/:id:** Delete a task by ID.
+### Messages
+
+- **GET /api/messages:** Get all messages.
+- **POST /api/messages:** Send a new message.
+- **GET /api/messages/:id:** Get details of a specific message.
+- **PUT /api/messages/:id:** Update details of a message.
+- **DELETE /api/messages/:id:** Delete a message.
 
 ## Code Structure
 
 The project follows a structured directory layout for better organization:
 
-- **api/**
+- **config/**
 - **coverage/**
-- **ScreenShots/**
-- **App.js**
+- **controllers**
+- **Jmeter Testing**
+- **test***
+- **server.js**
 - **README.md**
 
 ## Author

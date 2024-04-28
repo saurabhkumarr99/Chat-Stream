@@ -14,9 +14,6 @@ appSkr.use(bodyParserSkr.json());
 appSkr.use('/api/users', userRouterSkr);
 appSkr.use('/api', loginRouterSkr);
 
-// Serve static files from the public directory
-appSkr.use(expressSkr.static('public'));
-
 // Upgrade HTTP server to handle WebSocket connections
 const serverSkr = appSkr.listen(process.env.PORT || 3000, function() {
     console.log(`Server is listening on http://localhost:${serverSkr.address().port}`);
